@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "data_path.h": "c",
+        "alg_app.h": "c",
+        "alg_interface.h": "c",
+        "alink_track.h": "c"
+    }
+}

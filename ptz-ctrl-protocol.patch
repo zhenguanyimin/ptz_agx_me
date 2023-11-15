@@ -1,0 +1,542 @@
+diff --git a/src/app/ptz/ptz_app.cpp b/src/app/ptz/ptz_app.cpp
+index 7a144ba..fd37058 100644
+--- a/src/app/ptz/ptz_app.cpp
++++ b/src/app/ptz/ptz_app.cpp
+@@ -73,77 +73,183 @@ static void* ptz_camera_stream_thread(void *arg)
+ 	return NULL;
+ }
+ 
+-// static int32_t ptz_dev_status(ptz_protocol_msg_t *msg)
+-// {
+-// 	skyfend_log_debug("ptz dev status info(%x)\n", msg->command);
+-// 	// for(int i=0; i<msg->msglen; i++) {
+-// 	// 	printf("%02x ", msg->msg[i]);
+-// 	// }
+-// 	// printf("\n");
+-// 	if(sizeof(ptz_msg_status_t) >= msg->msglen) {
+-// 		ptz_msg_status_t *status = (ptz_msg_status_t *)msg->msg;
+-// 		skyfend_log_debug("photoelectricity_no = %d\n", status->photoelectricity_no);
+-// 		skyfend_log_debug("photoelectricity_status_timesmap = %lu\n", status->photoelectricity_status_timesmap);
+-// 		skyfend_log_debug("work_status = %d\n", status->work_status);
+-// 		skyfend_log_debug("work_mode = %d\n", status->work_mode);
+-// 		skyfend_log_debug("bitcode = %lu\n", status->bitcode);
+-// 		skyfend_log_debug("reserver = %d\n", ((int32_t*)status->reserver)[0]);
+-// 	}
+-
+-// 	return 0;
+-// }
+-
+-// static int32_t ptz_target_info(ptz_protocol_msg_t *msg)
+-// {
+-// 	skyfend_log_debug("ptz targets info(%x)\n", msg->command);
+-// 	// for(int i=0; i<msg->msglen; i++) {
+-// 	// 	printf("%02x ", msg->msg[i]);
+-// 	// }
+-// 	// printf("\n");
+-
+-// 	ptz_msg_target_pac_t *targets = (ptz_msg_target_pac_t *)msg->msg;
+-// 	skyfend_log_debug("last_time  = %d\n", targets->last_time);
+-// 	skyfend_log_debug("target_num = %d\n", targets->target_num);
+-// 	skyfend_log_debug("data_len = %d\n", targets->data_len);
+-// 	if(targets->target_num > 0) {
+-// 		targets->targets = (ptz_msg_target_info_t *)(msg->msg + 12);
+-// 		if(!targets->targets) {
+-// 			skyfend_log_error("%s:%d> memory error...\n", __FUNCTION__, __LINE__);
+-// 			return -1;
+-// 		}
+-// 		for(int i=0; i<targets->target_num; i++) {
+-// 			skyfend_log_debug("target %d info=>\n", i);
+-// 			skyfend_log_debug("target_no = %d\n", targets->targets[i].target_no);
+-// 			skyfend_log_debug("target_type = %d\n", targets->targets[i].target_type);
+-// 			skyfend_log_debug("similarty = %d\n", targets->targets[i].similarty);
+-// 			skyfend_log_debug("width = %d\n", targets->targets[i].width);
+-// 			skyfend_log_debug("height = %d\n", targets->targets[i].height);
+-// 			skyfend_log_debug("phy_width = %d\n", targets->targets[i].phy_width);
+-// 			skyfend_log_debug("phy_height = %d\n", targets->targets[i].phy_height);
+-// 			skyfend_log_debug("motion_drirection = %d\n", targets->targets[i].motion_drirection);
+-// 			skyfend_log_debug("ai_mode = %d\n", targets->targets[i].ai_mode);
+-// 			skyfend_log_debug("reserver = %d\n", targets->targets[i].reserver);
+-// 			skyfend_log_debug("horizatal_speed = %d\n", targets->targets[i].horizatal_speed);
+-// 			skyfend_log_debug("vertical_speed = %d\n", targets->targets[i].vertical_speed);
+-// 			skyfend_log_debug("target_position_x = %d\n", targets->targets[i].target_position_x);
+-// 			skyfend_log_debug("target_position_y = %d\n", targets->targets[i].target_position_y);
+-// 			skyfend_log_debug("target_azimuth = %lu\n", targets->targets[i].target_azimuth);
+-// 			skyfend_log_debug("target_pitching = %lu\n", targets->targets[i].target_pitching);
+-// 			skyfend_log_debug("target_distance = %d\n", targets->targets[i].target_distance);
+-// 			skyfend_log_debug("\n");
+-// 		}
+-// 	}
+-
+-// 	return 0;
+-// }
++static int32_t ptz_dev_status(ptz_protocol_msg_t *msg)
++{
++	skyfend_log_debug("ptz dev status info(%x)\n", msg->command);
++	// for(int i=0; i<msg->msglen; i++) {
++	// 	printf("%02x ", msg->msg[i]);
++	// }
++	// printf("\n");
++	if(sizeof(ptz_msg_status_t) >= msg->msglen) {
++		ptz_msg_status_t *status = (ptz_msg_status_t *)msg->msg;
++		skyfend_log_debug("photoelectricity_no = %d", status->photoelectricity_no);
++		skyfend_log_debug("photoelectricity_status_timesmap = %lu", status->photoelectricity_status_timesmap);
++		skyfend_log_debug("work_status = %d", status->work_status);
++		skyfend_log_debug("work_mode = %d", status->work_mode);
++		skyfend_log_debug("bitcode = %lu", status->bitcode);
++		skyfend_log_debug("reserver = %d", ((int32_t*)status->reserver)[0]);
++	}
++
++	return 0;
++}
++
++static int32_t ptz_target_info(ptz_protocol_msg_t *msg)
++{
++	skyfend_log_debug("ptz targets info(%x)\n", msg->command);
++	// for(int i=0; i<msg->msglen; i++) {
++	// 	printf("%02x ", msg->msg[i]);
++	// }
++	// printf("\n");
++
++	ptz_msg_target_pac_t *targets = (ptz_msg_target_pac_t *)msg->msg;
++	skyfend_log_debug("last_time  = %d\n", targets->last_time);
++	skyfend_log_debug("target_num = %d\n", targets->target_num);
++	skyfend_log_debug("data_len = %d\n", targets->data_len);
++	if(targets->target_num > 0) {
++		targets->targets = (ptz_msg_target_info_t *)(msg->msg + 12);
++		if(!targets->targets) {
++			skyfend_log_error("%s:%d> memory error...\n", __FUNCTION__, __LINE__);
++			return -1;
++		}
++		for(int i=0; i<targets->target_num; i++) {
++			skyfend_log_debug("target %d info=>", i);
++			skyfend_log_debug("target_no = %d", targets->targets[i].target_no);
++			skyfend_log_debug("target_type = %d", targets->targets[i].target_type);
++			skyfend_log_debug("similarty = %d", targets->targets[i].similarty);
++			skyfend_log_debug("width = %d", targets->targets[i].width);
++			skyfend_log_debug("height = %d", targets->targets[i].height);
++			skyfend_log_debug("phy_width = %d", targets->targets[i].phy_width);
++			skyfend_log_debug("phy_height = %d", targets->targets[i].phy_height);
++			skyfend_log_debug("motion_drirection = %d", targets->targets[i].motion_drirection);
++			skyfend_log_debug("ai_mode = %d", targets->targets[i].ai_mode);
++			skyfend_log_debug("reserver = %d", targets->targets[i].reserver);
++			skyfend_log_debug("horizatal_speed = %d", targets->targets[i].horizatal_speed);
++			skyfend_log_debug("vertical_speed = %d", targets->targets[i].vertical_speed);
++			skyfend_log_debug("target_position_x = %d", targets->targets[i].target_position_x);
++			skyfend_log_debug("target_position_y = %d", targets->targets[i].target_position_y);
++			skyfend_log_debug("target_azimuth = %lu", targets->targets[i].target_azimuth);
++			skyfend_log_debug("target_pitching = %lu", targets->targets[i].target_pitching);
++			skyfend_log_debug("target_distance = %d", targets->targets[i].target_distance);
++			skyfend_log_debug("\n");
++		}
++	}
++
++	return 0;
++}
++
++static int32_t ptz_dev_ext_info_0x08(ptz_protocol_msg_t *msg)
++{
++	ptz_msg_dev_ext_info_t *dev_ext = (ptz_msg_dev_ext_info_t *)msg->msg; 
++
++	if(NULL == dev_ext) {
++		skyfend_log_info("%s:%d msg is null\n", __FUNCTION__, __LINE__);
++		return 0;
++	}
++	skyfend_log_debug("photoelectricity_no = %d\n", dev_ext->photoelectricity_no);
++	skyfend_log_debug("sys_timesmap = %lu\n", dev_ext->sys_timesmap);
++	skyfend_log_debug("work_status = %d\n", dev_ext->work_status);
++	skyfend_log_debug("data_len = %d\n", dev_ext->data_len);
++	if(dev_ext->work_status == 0) {
++		if(dev_ext->data_len >= sizeof(int)) {
++			int *time = (int *)(msg->msg + sizeof(ptz_msg_dev_ext_info_t));
++			skyfend_log_debug("time = %d", time[0]);
++		}
++	} else if(dev_ext->work_status == 1) {
++		ptz_msg_dev_status_search_t *sserach = (ptz_msg_dev_status_search_t *)(msg->msg + sizeof(ptz_msg_dev_ext_info_t));
++		skyfend_log_debug("time = %d", sserach->time);
++		skyfend_log_debug("target_num = %d", sserach->target_num);
++		skyfend_log_debug("data_len = %d", sserach->data_len);
++
++		if(sserach->data_len >= sizeof(ptz_msg_dev_target_info_t)) {
++		int num =  sserach->data_len/sizeof(ptz_msg_dev_target_info_t);
++		ptz_msg_dev_target_info_t *target = (ptz_msg_dev_target_info_t *)(msg->msg + sizeof(ptz_msg_dev_ext_info_t) + sizeof(ptz_msg_dev_status_search_t));
++			for(int i=0; i<num; i++) {
++				skyfend_log_debug("target %d ===> ", i);
++				skyfend_log_debug("targt_no = %d", target[i].targt_no);
++				skyfend_log_debug("target_type = %d", target[i].target_type);
++				skyfend_log_debug("similarity = %d", target[i].similarity);
++				skyfend_log_debug("target_width = %d", target[i].target_width);
++				skyfend_log_debug("target_height = %d", target[i].target_height);
++				skyfend_log_debug("target_azimuth = %f", target[i].target_azimuth);
++				skyfend_log_debug("target_pitching_angle = %f", target[i].target_pitching_angle);
++			}
++		}		
++	} else if(dev_ext->work_status == 2) {
++		ptz_msg_dev_status_track_t *strack = (ptz_msg_dev_status_track_t *)(msg->msg + sizeof(ptz_msg_dev_ext_info_t));
++		skyfend_log_debug("time = %d", strack->time);
++		skyfend_log_debug("user_id = %d", strack->user_id);
++		skyfend_log_debug("target_status = %d", strack->target_status);
++				
++		skyfend_log_debug("targt_no = %d", strack->target.targt_no);
++		skyfend_log_debug("target_type = %d", strack->target.target_type);
++		skyfend_log_debug("similarity = %d", strack->target.similarity);
++		skyfend_log_debug("target_width = %d", strack->target.target_width);
++		skyfend_log_debug("target_height = %d", strack->target.target_height);
++		skyfend_log_debug("target_azimuth = %f", strack->target.target_azimuth);
++		skyfend_log_debug("target_pitching_angle = %f", strack->target.target_pitching_angle);
++	} else {
++		skyfend_log_debug("can't recongize this work status");
++	}
++
++	return 0;
++}
++
++static int32_t ptz_lense_ext_info_0x0c(ptz_protocol_msg_t *msg)
++{
++	ptz_msg_lense_ext_info_t *lense_ext = (ptz_msg_lense_ext_info_t *)msg->msg; 
++
++	if(NULL == lense_ext) {
++		skyfend_log_info("%s:%d msg is null\n", __FUNCTION__, __LINE__);
++		return 0;
++	}
++
++	skyfend_log_debug("photoelectricity_no = %d", lense_ext->photoelectricity_no);
++	skyfend_log_debug("cur_status_timesmap = %lu", lense_ext->cur_status_timesmap);
++	skyfend_log_debug("visable_horizatal_angle = %d", lense_ext->visable_horizatal_angle);
++	skyfend_log_debug("visable_vertical_angle = %d", lense_ext->visable_vertical_angle);
++	skyfend_log_debug("thermal_horization_angle = %d", lense_ext->thermal_horization_angle);
++	skyfend_log_debug("thermal_vertical_angle = %d", lense_ext->thermal_vertical_angle);
++	skyfend_log_debug("visable_zoom = %d", lense_ext->visable_zoom);
++	skyfend_log_debug("thermal_zoom = %d", lense_ext->thermal_zoom);
++	skyfend_log_debug("visable_focal = %d", lense_ext->visable_focal);
++	skyfend_log_debug("thermal_focal = %d", lense_ext->thermal_focal);
++
++	return 0;
++}
++
++static int32_t ptz_sys_ext_info_0x15(ptz_protocol_msg_t *msg)
++{
++	ptz_msg_sys_ext_info_t *sys_ext = (ptz_msg_sys_ext_info_t *)msg->msg; 
++
++	if(NULL == sys_ext) {
++		skyfend_log_info("%s:%d msg is null\n", __FUNCTION__, __LINE__);
++		return 0;
++	}
++
++	skyfend_log_debug("photoelectricity_no = %d", sys_ext->photoelectricity_no);
++	skyfend_log_debug("cur_status_timesmap = %lu", sys_ext->cur_status_timesmap);
++	skyfend_log_debug("laser_rangefinder_status = %d", sys_ext->laser_rangefinder_status);
++	skyfend_log_debug("laser_measuring_status = %d", sys_ext->laser_measuring_status);
++	skyfend_log_debug("laser_fill_state = %d", sys_ext->laser_fill_state);
++	skyfend_log_debug("heater_condition = %d", sys_ext->heater_condition);
++	skyfend_log_debug("thermal_imaging_status = %d", sys_ext->thermal_imaging_status);
++	skyfend_log_debug("visible_focusing_mode = %d", sys_ext->visible_focusing_mode);
++	skyfend_log_debug("thermal_focusing_mode = %d", sys_ext->thermal_focusing_mode);
++	skyfend_log_debug("power_status_ext_device = %x", sys_ext->power_status_ext_device);
++
++	return 0;
++}
+ 
+ static int register_control_ptz_comands(void)
+ {
+ 	int ret = 0;
+ 
+-	// ret = eth_ptz_command_register(PTZ_COMMAND_DEV_STATUS, ptz_dev_status);
+-	// ret |= eth_ptz_command_register(PTZ_COMMAND_TARGET_INFO, ptz_target_info);
+-	ret = eth_ptz_command_register(PTZ_COMMAND_ATT_MSG, ptz_pitch_azimuth);
++	ret = eth_ptz_command_register(PTZ_COMMAND_DEV_STATUS, ptz_dev_status);
++	ret |= eth_ptz_command_register(PTZ_COMMAND_TARGET_INFO, ptz_target_info);
++	ret |= eth_ptz_command_register(PTZ_COMMAND_ATT_MSG, ptz_pitch_azimuth);
++	ret |= eth_ptz_command_register(PTZ_COMMAND_DEV_EXT_INFO, ptz_dev_ext_info_0x08);
++	ret |= eth_ptz_command_register(PTZ_COMMAND_LENSE_EXT_INFO, ptz_lense_ext_info_0x0c);
++	ret |= eth_ptz_command_register(PTZ_COMMAND_SYS_EXT_INFO, ptz_sys_ext_info_0x15);
+ 
+ 	return ret;
+ }
+diff --git a/src/srv/eth_link/ptz_protocol/CMakeLists.txt b/src/srv/eth_link/ptz_protocol/CMakeLists.txt
+index 4d106ce..9497650 100644
+--- a/src/srv/eth_link/ptz_protocol/CMakeLists.txt
++++ b/src/srv/eth_link/ptz_protocol/CMakeLists.txt
+@@ -1,5 +1,8 @@
+ #
+ #
++
++include_directories(${CMAKE_SOURCE_DIR}/src/common/tools/)
++
+ aux_source_directory(. DIR_LIBS_SRCS)
+ add_library(ptz_control_protocol ${DIR_LIBS_SRCS})
+ set(PTZ_PROTOCOL_LIBS ptz_control_protocol PARENT_SCOPE)
+diff --git a/src/srv/eth_link/ptz_protocol/ptz_control.c b/src/srv/eth_link/ptz_protocol/ptz_control.c
+index 18e6141..1a9c1da 100644
+--- a/src/srv/eth_link/ptz_protocol/ptz_control.c
++++ b/src/srv/eth_link/ptz_protocol/ptz_control.c
+@@ -13,6 +13,7 @@
+ #include "../../log/skyfend_log.h"
+ #include "../eth_link_ptz.h"
+ #include "ptz_control.h"
++#include "skyfend_tools.h"
+ 
+ int send_ptz_control_addr(ptz_msgid_0x03_addr_t *addr_t)
+ {
+@@ -76,7 +77,6 @@ int send_ptz_control_add_ext(ptz_msg_addr_external_t *addr_ext)
+ 	return ret;
+ }
+ 
+-
+ int send_ptz_control_pack(ptz_msg_ctrl_pack_t *ctrl_p)
+ {
+ 	int ret = 0;
+@@ -165,3 +165,98 @@ int send_ptz_control_scan_ext(ptz_msg_scan_ext_t *scan)
+ 
+ 	return ret;
+ }
++
++int send_ptz_peripheral_ctrl(ptz_msg_peripheral_ctrl_t *pctrl)
++{
++	int ret = 0;
++	unsigned char dat[128] = {0};
++	ptz_protocol_msg_t msginfo = {0};
++	struct timeval tv;
++
++	if(!pctrl) {
++		return -1;
++	}
++	gettimeofday(&tv, NULL);
++	pctrl->photoelectricity_no = PTZ_PHOTOELECTRICITY_NO;
++	pctrl->sys_timesmap = tv.tv_sec * 1000 + tv.tv_usec / 1000;
++	memcpy(dat, pctrl, sizeof(ptz_msg_peripheral_ctrl_t));
++	msginfo.msg = dat;
++	msginfo.command = PTZ_COMMAND_PERIPHERAL_CTRL;
++	msginfo.msglen = sizeof(ptz_msg_peripheral_ctrl_t);
++	ret = send_ptz_package(&msginfo);
++
++	return ret;
++}
++
++int send_ptz_ai_ctrl(ptz_msg_ai_ctrl_t *actrl)
++{
++	int ret = 0;
++	unsigned char *dat = NULL;
++	ptz_protocol_msg_t msginfo = {0};
++	struct timeval tv;
++
++	if(!actrl || (actrl->param_len > 0 && !actrl->param)) {
++		return -1;
++	}
++	gettimeofday(&tv, NULL);
++	actrl->photoelectricity_no = PTZ_PHOTOELECTRICITY_NO;
++	actrl->sys_timesmap = tv.tv_sec * 1000 + tv.tv_usec / 1000;
++	dat = skyfend_malloc(sizeof(ptz_msg_ai_ctrl_t) + actrl->param_len);
++	if(!dat) {
++		return -1;
++	}
++	memcpy(dat, actrl, sizeof(ptz_msg_peripheral_ctrl_t));
++	memcpy(dat+sizeof(ptz_msg_peripheral_ctrl_t) - sizeof(actrl->param), actrl->param, actrl->param_len);
++	msginfo.msg = dat;
++	msginfo.command = PTZ_COMMAND_AI_CTRL;
++	msginfo.msglen = sizeof(ptz_msg_peripheral_ctrl_t) - sizeof(actrl->param) + actrl->param_len;
++	ret = send_ptz_package(&msginfo);
++	skyfend_free(dat);
++
++	return ret;
++}
++
++int send_ptz_config_focal_mode(ptz_msg_config_focal_mode_t *cfocal_mode)
++{
++	int ret = 0;
++	unsigned char dat[128] = {0};
++	ptz_protocol_msg_t msginfo = {0};
++	struct timeval tv;
++
++	if(!cfocal_mode) {
++		return -1;
++	}
++	gettimeofday(&tv, NULL);
++	cfocal_mode->photoelectricity_no = PTZ_PHOTOELECTRICITY_NO;
++	cfocal_mode->sys_timesmap = tv.tv_sec * 1000 + tv.tv_usec / 1000;
++	memcpy(dat, cfocal_mode, sizeof(ptz_msg_config_focal_mode_t));
++	msginfo.msg = dat;
++	msginfo.command = PTZ_COMMAND_CONFIG_FOCAL_MODE;
++	msginfo.msglen = sizeof(ptz_msg_config_focal_mode_t);
++	ret = send_ptz_package(&msginfo);
++
++	return ret;
++}
++
++int send_ptz_config_track_param(ptz_msg_config_track_param_t *ctrack_param)
++{
++	int ret = 0;
++	unsigned char dat[128] = {0};
++	ptz_protocol_msg_t msginfo = {0};
++	struct timeval tv;
++
++	if(!ctrack_param) {
++		return -1;
++	}
++	gettimeofday(&tv, NULL);
++	ctrack_param->photoelectricity_no = PTZ_PHOTOELECTRICITY_NO;
++	ctrack_param->sys_timesmap = tv.tv_sec * 1000 + tv.tv_usec / 1000;
++	memcpy(dat, ctrack_param, sizeof(ptz_msg_config_track_param_t));
++	msginfo.msg = dat;
++	msginfo.command = PTZ_COMMAND_CONFIG_TRACK_PARAM;
++	msginfo.msglen = sizeof(ptz_msg_config_track_param_t);
++	ret = send_ptz_package(&msginfo);
++
++	return ret;
++}
++
+diff --git a/src/srv/eth_link/ptz_protocol/ptz_control.h b/src/srv/eth_link/ptz_protocol/ptz_control.h
+index bdd630b..5ef2bdd 100644
+--- a/src/srv/eth_link/ptz_protocol/ptz_control.h
++++ b/src/srv/eth_link/ptz_protocol/ptz_control.h
+@@ -74,6 +74,72 @@ typedef struct ptz_msg_pitch_azimuth {
+ }ptz_msg_pitch_azimuth_t;
+ #pragma pack()
+ 
++//0x08
++#pragma pack(1)
++typedef struct ptz_msg_dev_target_info {
++    uint32_t targt_no;
++    uint32_t target_type;
++    uint32_t similarity;
++    uint32_t target_width;
++    uint32_t target_height;
++    double   target_azimuth;
++    double   target_pitching_angle;
++}ptz_msg_dev_target_info_t;
++
++typedef struct ptz_msg_dev_status_search {
++    uint32_t time;
++    uint32_t target_num;
++    uint32_t data_len;
++    //data
++}ptz_msg_dev_status_search_t;
++
++typedef struct ptz_msg_dev_status_track {
++    uint32_t time;
++    uint16_t user_id;
++    uint16_t target_status;
++    //target info
++    ptz_msg_dev_target_info_t target;
++}ptz_msg_dev_status_track_t;
++
++typedef struct ptz_msg_dev_ext_info {
++    uint32_t photoelectricity_no;
++    uint64_t sys_timesmap;
++    uint32_t work_status;
++    uint32_t data_len;    
++}ptz_msg_dev_ext_info_t;
++#pragma pack()
++
++#pragma pack(1)
++typedef struct ptz_msg_lense_ext_info{
++    uint32_t photoelectricity_no;
++    uint64_t cur_status_timesmap;
++    uint32_t visable_horizatal_angle;
++    uint32_t visable_vertical_angle;
++    uint32_t thermal_horization_angle;
++    uint32_t thermal_vertical_angle;
++    uint32_t visable_zoom;
++    uint32_t thermal_zoom;
++    uint32_t visable_focal;
++    uint32_t thermal_focal;
++}ptz_msg_lense_ext_info_t;
++#pragma pack()
++
++#pragma pack(1)
++typedef struct ptz_msg_sys_ext_info{
++    uint32_t photoelectricity_no;
++    uint64_t cur_status_timesmap;
++    uint32_t laser_rangefinder_status;
++    uint32_t laser_measuring_status;
++    uint32_t laser_fill_state;
++    uint32_t heater_condition;
++    uint32_t thermal_imaging_status;
++    uint32_t visible_focusing_mode;
++    uint32_t thermal_focusing_mode;
++    uint8_t power_status_ext_device;
++    uint8_t reserver[31];
++}ptz_msg_sys_ext_info_t;
++#pragma pack()
++
+ //-----------------------agx -> ptz-----------------------
+ //0x03
+ #pragma pack(1)
+@@ -177,6 +243,47 @@ typedef struct ptz_msg_scan_ext {
+ }ptz_msg_scan_ext_t;
+ #pragma pack()
+ 
++#pragma pack(1)
++typedef struct ptz_msg_peripheral_ctrl {
++    uint32_t photoelectricity_no;
++    uint64_t sys_timesmap;
++    uint32_t ctrl_cmd;
++    uint32_t ctrl_param;
++    uint32_t reserver;
++}ptz_msg_peripheral_ctrl_t;
++#pragma pack()
++
++#pragma pack(1)
++typedef struct ptz_msg_ai_ctrl {
++    uint32_t photoelectricity_no;
++    uint64_t sys_timesmap;
++    uint32_t config_cmd;
++    uint32_t param_len;
++    char*   param;
++}ptz_msg_ai_ctrl_t;
++#pragma pack()
++
++#pragma pack(1)
++typedef struct ptz_msg_config_focal_mode {
++    uint32_t photoelectricity_no;
++    uint64_t sys_timesmap;
++    uint32_t focal_mode;
++    uint8_t channel;
++    uint8_t reserver[3];
++}ptz_msg_config_focal_mode_t;
++#pragma pack()
++
++#pragma pack(1)
++typedef struct ptz_msg_config_track_param {
++    uint32_t photoelectricity_no;
++    uint64_t sys_timesmap;
++    uint32_t enable_focal_auto;
++    uint32_t focal_magnifying_limit;
++    uint32_t focal_reduce_limit;
++    uint8_t reserver[32];
++}ptz_msg_config_track_param_t;
++#pragma pack()
++
+ int send_ptz_control_addr(ptz_msgid_0x03_addr_t *addr_t);
+ int send_ptz_control_direction(ptz_msg_direction_ctrl_t *dir_ctrl);
+ int send_ptz_control_add_ext(ptz_msg_addr_external_t *addr_ext);
+@@ -185,7 +292,6 @@ int send_ptz_control_track(ptz_msg_track_t *track);
+ int send_ptz_control_manual_lock_target(ptz_msg_manual_lock_target_t *track);
+ int send_ptz_control_scan_ext(ptz_msg_scan_ext_t *scan);
+ 
+-
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/src/srv/eth_link/ptz_protocol/ptz_control_protocol.h b/src/srv/eth_link/ptz_protocol/ptz_control_protocol.h
+index c213939..9425ca5 100644
+--- a/src/srv/eth_link/ptz_protocol/ptz_control_protocol.h
++++ b/src/srv/eth_link/ptz_protocol/ptz_control_protocol.h
+@@ -26,11 +26,18 @@
+ #define PTZ_COMMAND_DISTEND_LOOKUP      0x05
+ #define PTZ_COMMAND_DISTEND_CONTROL     0x06
+ #define PTZ_COMMAND_DISTEND_STATUS      0x07
++#define PTZ_COMMAND_DEV_EXT_INFO        0x08
+ #define PTZ_COMMAND_CONTROL_PACKAGE     0x09
+ #define PTZ_COMMAND_SCAN_EXT            0x0A
+ #define PTZ_COMMAND_TARGET_INFO         0x0B
++#define PTZ_COMMAND_LENSE_EXT_INFO      0x0C
+ #define PTZ_COMMAND_DIRECTION_CONTROL   0x0D
+ #define PTZ_COMMAND_LOCK_TARGET_MANUAL  0x10
++#define PTZ_COMMAND_PERIPHERAL_CTRL     0x11
++#define PTZ_COMMAND_AI_CTRL             0x12
++#define PTZ_COMMAND_CONFIG_FOCAL_MODE   0x13
++#define PTZ_COMMAND_CONFIG_TRACK_PARAM  0x14
++#define PTZ_COMMAND_SYS_EXT_INFO        0x15
+ #define PTZ_COMMAND_ADDR_EXT            0x16
+ 
+ #define PTZ_PACKAGE_MAX_LEN 2048
