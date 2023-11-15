@@ -1,0 +1,151 @@
+/************************************************************YOLOV3相关定义****************************************************************/
+/*YOLOV3定义*/
+
+/*模板1*/
+static char g_uav_class3[3][32] = 
+{
+	{"uav"},
+	//{"airplane"},
+	{"airplane"},
+	{"fixwing"},
+};
+
+
+/*模板2*/
+static char g_yolov3_class80[80][32] = 
+{
+	{"person"},
+	{"bicycle"},
+	{"car"},
+	{"motorbike"},
+	{"aeroplane"},
+	{"bus"},
+	{"train"},
+	{"truck"},
+	{"boat"},
+	{"traffic light"},
+	{"fire hydrant"},
+	{"stop sign"},
+	{"parking meter"},
+	{"bench"},
+	{"bird"},
+	{"cat"},
+	{"dog"},
+	{"horse"},
+	{"sheep"},
+	{"cow"},
+	{"elephant"},
+	{"bear"},
+	{"zebra"},
+	{"giraffe"},
+	{"backpack"},
+	{"umbrella"},
+	{"handbag"},
+	{"tie"},
+	{"suitcase"},
+	{"frisbee"},
+	{"skis"},
+	{"snowboard"},
+	{"sports ball"},
+	{"kite"},
+	{"baseball bat"},
+	{"baseball glove"},
+	{"skateboard"},
+	{"surfboard"},
+	{"tennis racket"},
+	{"bottle"},
+	{"wine glass"},
+	{"cup"},
+	{"fork"},
+	{"knife"},
+	{"spoon"},
+	{"bowl"},
+	{"banana"},
+	{"apple"},
+	{"sandwich"},
+	{"orange"},
+	{"broccoli"},
+	{"carrot"},
+	{"hot dog"},
+	{"pizza"},
+	{"donut"},
+	{"cake"},
+	{"chair"},
+	{"sofa"},
+	{"pottedplant"},
+	{"bed"},
+	{"diningtable"},
+	{"toilet"},
+	{"tvmonitor"},
+	{"laptop"},
+	{"mouse"},
+	{"remote"},
+	{"keyboard"},
+	{"cell phone"},
+	{"microwave"},
+	{"oven"},
+	{"toaster"},
+	{"sink"},
+	{"refrigerator"},
+	{"book"},
+	{"clock"},
+	{"vase"},
+	{"scissors"},
+	{"teddy bear"},
+	{"hair drier"},
+	{"toothbrush"},
+};
+
+
+/*模板3*/
+
+static char g_mobilenet_yolov3[21][32] =
+{
+	{"background"},
+	{"aeroplane"},
+	{"bicycle"},
+	{"bird"},
+	{"boat"},
+	{"bottle"},
+	{"bus"},
+	{"car"},
+	{"cat"},
+	{"chair"},
+	{"cow"},
+	{"diningtable"},
+	{"dog"},
+	{"horse"},
+	{"motorbike"},
+	{"person"},
+	{"pottedplant"},
+	{"sheep"},
+	{"sofa"},
+	{"train"},
+	{"tvmonitor"},
+};
+
+
+/*模板4*/
+static char g_yolov4_class20[20][32] =
+{
+ {"airplane"},   //0
+ {"uav"},	 //1
+ {"fixwing"},    //2
+ {"smoke"},      //3
+ {"fire"},       //4
+ {"person"},     //5
+ {"bicycle"},    //6
+ {"motorbike"},  //7
+ {"car"},        //8
+ {"truck"},      //9
+ {"bus"},        //10
+ {"train"},      //11
+ {"ship"},       //12
+ {"kite"},       //13
+ {"bird"},       //14
+ {"animal"},     //15
+ {"surfboard"},  //16
+ {"tvmonitor"},  //17
+ {"laptop"},	 // 18
+ {"chair"}, //LPR //19
+};
